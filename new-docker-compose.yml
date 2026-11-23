@@ -1,0 +1,65 @@
+#version: "3.8"
+#services:
+#  # --- Твое Приложение ---
+#  app:
+#    build: .
+#    container_name: invity_backend
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      # Подключаемся к контейнерам по их именам внутри сети Docker
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/invity?reWriteBatchedInserts=true
+#      - SPRING_REDIS_HOST=redis
+#      - SPRING_RABBITMQ_HOST=rabbitmq
+#
+#      # Переменные для секретов (лучше передавать через .env файл)
+#      - SHOPIFY_API_KEY=${SHOPIFY_API_KEY}
+#      - SHOPIFY_API_SECRET=${SHOPIFY_API_SECRET}
+#      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+#      - ADMIN_CHAT_ID=${ADMIN_CHAT_ID}
+#      - APP_BASE_URL=${APP_BASE_URL}
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_started
+#    restart: always
+#
+#  # --- База Данных ---
+#  db:
+#    image: postgres:15
+#    container_name: invity_db
+#    environment:
+#      POSTGRES_DB: invity
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#    ports:
+#      - "5432:5432"
+#    healthcheck: # Проверка готовности базы
+#      test: ["CMD-SHELL", "pg_isready -U postgres -d invity"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#    volumes:
+#      - invity_db_data:/var/lib/postgresql/data
+#    restart: always
+#
+#  # --- Кэш ---
+#  redis:
+#    image: redis:7-alpine
+#    container_name: invity_redis
+#    ports:
+#      - "6379:6379"
+#    restart: always
+#
+#  # --- Очереди ---
+#  rabbitmq:
+#    image: rabbitmq:3-management-alpine
+#    container_name: invity_rabbit
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    restart: always
+#
+#volumes:
+#  invity_db_data:

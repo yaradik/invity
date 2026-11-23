@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15
+    container_name: invity_db
+    environment:
+      POSTGRES_DB: invity
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - invity_db_data:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: invity_redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: invity_rabbit
+    ports:
+      - "5672:5672"   # Порт для подключения приложения
+      - "15672:15672" # Веб-интерфейс (логин/пароль: guest/guest)
+    restart: always
+
+volumes:
+  invity_db_data:
